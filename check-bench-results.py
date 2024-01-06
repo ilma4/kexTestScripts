@@ -3,8 +3,8 @@ import os
 from re import L
 import sys
 
-mock_results = "./kex/temp"
-master_results = "./clean-kex/temp"
+mockPath = "./kex/temp"
+masterPath = "./clean-kex/temp"
 logName = "kex.log"
 
 differenceMode = "short"
@@ -54,8 +54,8 @@ def printDiff(mock_res: str, master_res: str):
             
 
 def compareTest(test: str):
-    mock_res = readCoverage(f"{mock_results}/{test}/{logName}")
-    master_res = readCoverage(f"{master_results}/{test}/{logName}")
+    mock_res = readCoverage(f"{mockPath}/{test}/{logName}")
+    master_res = readCoverage(f"{masterPath}/{test}/{logName}")
 
     print(f"Comparing {test}...")
     if mock_res != master_res:
@@ -67,7 +67,7 @@ def compareTest(test: str):
 
 
 def check_all():
-    for test in os.listdir(mock_results):
+    for test in os.listdir(mockPath):
         compareTest(test)
         print()
 
