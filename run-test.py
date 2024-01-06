@@ -71,10 +71,17 @@ def test_all():
             run_test(target)
 
 
-def main():
-    relpath = os.path.dirname(os.path.relpath(__file__))
-    if relpath != "":
-        os.chdir(relpath)
+def multiple_mode():
+    print("Testing both kex and clean-kex")
+    os.chdir("./kex")
+    single_mode()
+    print("Switching to clean-kex")
+    os.chdir("../clean-kex")
+    single_mode()
+    print("All done!")
+
+
+def single_mode():
     print("Current working directory: " + os.getcwd())
 
     if len(os.sys.argv) > 1:
@@ -84,6 +91,20 @@ def main():
 
     print("Running all tests")
     test_all()
+
+
+def main():
+    if os.getcwd().find("kex.py") != -1:
+        single_mode()
+        return
+    elif os.listdir().__contains__("kex") != -1 and os.listdir().__contains__("clean-kex") != -1:
+        multiple_mode()
+        return
+    else:
+        print("Script must be run from kex directory (contains kex.py) or superdirectory containing both kex and clean-kex (clean-kex must be named that)")
+        print("Current working directory: " + os.getcwd())
+        print(f"Content of directory: {os.listdir()}")
+        return
 
 
 if __name__ == "__main__":
