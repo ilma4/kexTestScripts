@@ -72,7 +72,9 @@ def test_all():
 
 
 def main():
-    os.chdir(os.path.dirname(os.path.relpath(__file__)))
+    relpath = os.path.dirname(os.path.relpath(__file__))
+    if relpath != "":
+        os.chdir(relpath)
     print("Current working directory: " + os.getcwd())
 
     if len(os.sys.argv) > 1:
