@@ -94,7 +94,8 @@ def single_mode():
 
 
 def main():
-    if os.getcwd().find("kex.py") != -1:
+    if os.listdir().__contains__("kex.py") != -1:
+        print(f"Testing only {os.path.basename(os.getcwd())}")
         single_mode()
         return
     elif os.listdir().__contains__("kex") != -1 and os.listdir().__contains__("clean-kex") != -1:
