@@ -7,6 +7,7 @@ outputdir = "./temp"
 mockitoPath = "runtime-deps/lib/mockito-core-4.11.0.jar"
 
 def run_test(target):
+    print(f"Running test: {target}")
     output = target.split('.')[-1]
     print(f"target: {target}")
     print(f"output: {output}")
@@ -71,9 +72,8 @@ def test_all():
 
 def main():
     if len(os.sys.argv) > 1:
-        target = os.sys.argv[1]
-        print(f"Running single test: {target}")
-        run_test(target)
+        for target in os.sys.argv[1:]:
+            run_test(target)
         return
 
     print("Running all tests")
