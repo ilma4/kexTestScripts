@@ -7,6 +7,7 @@ outputdir = "./temp"
 mockitoPath = "runtime-deps/lib/mockito-core-4.11.0.jar"
 
 def run_test(target):
+    target = target.replace("/", ".")
     print(f"Running test: {target}")
     output = target.split('.')[-1]
     print(f"target: {target}")
@@ -71,6 +72,9 @@ def test_all():
 
 
 def main():
+    os.chdir(os.path.dirname(os.path.relpath(__file__)))
+    print("Current working directory: " + os.getcwd())
+
     if len(os.sys.argv) > 1:
         for target in os.sys.argv[1:]:
             run_test(target)

@@ -2,20 +2,26 @@
 import os
 import sys
 
-mock_results = "./kex/temp/"
-master_results = "./clean-kex/temp/"
+mock_results = "./kex/temp"
+master_results = "./clean-kex/temp"
 logName = "kex.log"
 
-def getCoverage(s : str) -> str:
-    return s[s.find("Coverage of"):] 
+def getCoverage(text : str) -> str:
+    return text[text.find("Coverage of"):] 
+
+
+def readCoverage(path: str) -> str:
+    print(f"Reading {path}")
+    if (not os.path.exists(path)):
+        return ""
+
+    content = open(path).read()
+    return getCoverage(content)
 
 
 def compareTest(test: str):
-    mock_content = open(mock_results + test + f"/{logName}").read()
-    mock_res = getCoverage(mock_content)
-
-    master_content = open(master_results + test + f"/{logName}").read()
-    master_res = getCoverage(master_content)
+    mock_res = readCoverage(f"{mock_results}/{test}/{logName}")
+    master_res = readCoverage(f"{master_results}/{test}/{logName}")
 
     print(f"Comparing {test}...")
     if mock_res != master_res:
@@ -37,6 +43,7 @@ def check_all():
 
 
 def main():
+    print("Current directory: ", os.getcwd())
     if len(sys.argv) == 1:
         check_all()
         return
