@@ -16,6 +16,7 @@ def getCoverage(text : str) -> str:
 def readCoverage(path: str) -> str:
     print(f"Reading {path}")
     if (not os.path.exists(path)):
+        print(f"File {path} does not exist!")
         return ""
 
     content = open(path).read()
