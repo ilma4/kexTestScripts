@@ -43,12 +43,11 @@ def printDiff(mock_res: str, master_res: str):
         for i in range(0, len(mock_funcs)):
             if mock_funcs[i] != master_funcs[i]:
                 print(f"Function {i} is different!")
-                print("Mock results:")
+                print("Mock:")
                 print(mock_funcs[i])
                 print('----------')
-                print("Master results:")
+                print("Master:")
                 print(master_funcs[i])
-                print()
             else:
                 print(f"Function {i} results are the same!")
             
