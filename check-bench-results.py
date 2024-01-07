@@ -32,10 +32,9 @@ def displayCoverage(result: str, name: str):
 
 def printDiff(mock_res: str, master_res: str):
     if differenceMode == "short":
-        print("Mock results:")
+        print("Mock:")
         print("\n".join(mock_res.splitlines()[:6]))
-        print('----------')
-        print("Master results:")
+        print("Master:")
         print("\n".join(master_res.splitlines()[:6]))
     elif differenceMode == "full":
         mock_funcs = mock_res.split("Coverage of")
@@ -45,7 +44,6 @@ def printDiff(mock_res: str, master_res: str):
                 print(f"Function {i} is different!")
                 print("Mock:")
                 print(mock_funcs[i])
-                print('----------')
                 print("Master:")
                 print(master_funcs[i])
             else:
