@@ -82,15 +82,15 @@ def compareTest(test: str):
                     print(f"Function {i} results are the same!")
     else:
         print(f"{test} is the same!")   
-    print(f"MockDescriptors: {countMockDescriptorCreations(mock_res)}")
+    print(f"MockDescriptors: {countMockDescriptorCreations(mock_log)}")
 
 
-def countMockDescriptorCreations(s: str) -> int:
-    return s.count("Created mock descriptor for")
+def countMockDescriptorCreations(log: str) -> int:
+    return log.count("Created mock descriptor for")
 
 
-def countNotFoundMethodForMock(s: str) -> int:
-    return s.count("No mock for ")
+def countNotFoundMethodForMock(log: str) -> int:
+    return log.count("No mock for ")
 
 
 def check_all():
