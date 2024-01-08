@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+from calendar import c
 import os
 from re import L
 import sys
@@ -8,6 +9,7 @@ masterPath = "./clean-kex/temp"
 logName = "kex.log"
 
 differenceMode = "short"
+
 
 def getCoverage(text : str) -> str:
     return text[text.find("Coverage of"):] 
@@ -21,6 +23,7 @@ def readCoverage(path: str) -> str:
 
     content = open(path).read()
     return getCoverage(content)
+
 
 def displayCoverage(result: str, name: str):
     print(f"{name} results:")
@@ -51,16 +54,43 @@ def printDiff(mock_res: str, master_res: str):
             
 
 def compareTest(test: str):
-    mock_res = readCoverage(f"{mockPath}/{test}/{logName}")
-    master_res = readCoverage(f"{masterPath}/{test}/{logName}")
+    mock_log_path = os.path.join(mockPath, test, logName)
+    mock_log = open(mock_log_path).read()
+    mock_res = getCoverage(mock_log)
+
+    master_res = readCoverage(os.path.join(masterPath, test, logName))
 
     print(f"Comparing {test}...")
     if mock_res != master_res:
         print(f"{test} has differences!")
-        printDiff(mock_res, master_res)
-        print()
+        if differenceMode == "short":
+            print("Mock:")
+            print("\n".join(mock_res.splitlines()[:6]))
+            print("Master:")
+            print("\n".join(master_res.splitlines()[:6]))
+        elif differenceMode == "full":
+            mock_funcs = mock_res.split("Coverage of")
+            master_funcs = master_res.split("Coverage of")
+            for i in range(0, len(mock_funcs)):
+                if mock_funcs[i] != master_funcs[i]:
+                    print(f"Function {i} is different!")
+                    print("Mock:")
+                    print(mock_funcs[i])
+                    print("Master:")
+                    print(master_funcs[i])
+                else:
+                    print(f"Function {i} results are the same!")
     else:
         print(f"{test} is the same!")   
+    print(f"MockDescriptors: {countMockDescriptorCreations(mock_res)}")
+
+
+def countMockDescriptorCreations(s: str) -> int:
+    return s.count("Created mock descriptor for")
+
+
+def countNotFoundMethodForMock(s: str) -> int:
+    return s.count("No mock for ")
 
 
 def check_all():
@@ -81,6 +111,7 @@ def main():
         for test in sys.argv[1:]:
             compareTest(test)
         return
+
 
 if __name__ == "__main__":
     main() 
