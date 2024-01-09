@@ -48,14 +48,16 @@ def compareTest(test: str) -> ((str, str, str, str), (str, str, str, str)):
     master_res = getCoverage(readFile(os.path.join(masterPath, test, logName)))
 
     print(f"Comparing {test}...")
+    if differenceMode == "short":
+        mock_res = "\n".join(mock_res.splitlines()[:6])
+        master_res = "\n".join(master_res.splitlines()[:6])
+
     if mock_res != master_res:
         print(f"{test} has differences!")
         if differenceMode == "short":
             print("Mock:")
-            mock_res = "\n".join(mock_res.splitlines()[:6])
             print(mock_res)
             print("Master:")
-            master_res = "\n".join(master_res.splitlines()[:6])
             print(master_res)
         elif differenceMode == "full":
             mock_funcs = mock_res.split("Coverage of")
