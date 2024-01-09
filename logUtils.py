@@ -28,6 +28,6 @@ def parseCoverage(results: str) -> (str, str, str, str):
     coverage = list(map(lambda x: x[:-1], coverage))
     if len(coverage) != 4:
         print(f"Error parsing coverage! Expected 4 values! Found: {coverage}")
-        return (0, 0, 0, 0)
+        return ("0", "0", "0", "0")
     # return (float(coverage[0][:-1]), float(coverage[1][:-1]), float(coverage[2][:-1]), float(coverage[3][:-1]))
     return coverage
