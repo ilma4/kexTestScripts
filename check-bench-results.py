@@ -3,26 +3,13 @@ from calendar import c
 import os
 from re import L
 import sys
+from logUtils import *
 
 mockPath = "./kex/temp"
 masterPath = "./clean-kex/temp"
 logName = "kex.log"
 
 differenceMode = "short"
-
-
-def getCoverage(text : str) -> str:
-    return text[text.find("Coverage of"):] 
-
-
-def readCoverage(path: str) -> str:
-    print(f"Reading {path}")
-    if (not os.path.exists(path)):
-        print(f"File {path} does not exist!")
-        return ""
-
-    content = open(path).read()
-    return getCoverage(content)
 
 
 def displayCoverage(result: str, name: str):
@@ -53,21 +40,23 @@ def printDiff(mock_res: str, master_res: str):
                 print(f"Function {i} results are the same!")
             
 
-def compareTest(test: str):
+def compareTest(test: str) -> ((str, str, str, str), (str, str, str, str)):
     mock_log_path = os.path.join(mockPath, test, logName)
-    mock_log = open(mock_log_path).read()
+    mock_log = readFile(mock_log_path) 
     mock_res = getCoverage(mock_log)
 
-    master_res = readCoverage(os.path.join(masterPath, test, logName))
+    master_res = getCoverage(readFile(os.path.join(masterPath, test, logName)))
 
     print(f"Comparing {test}...")
     if mock_res != master_res:
         print(f"{test} has differences!")
         if differenceMode == "short":
             print("Mock:")
-            print("\n".join(mock_res.splitlines()[:6]))
+            mock_res = "\n".join(mock_res.splitlines()[:6])
+            print(mock_res)
             print("Master:")
-            print("\n".join(master_res.splitlines()[:6]))
+            master_res = "\n".join(master_res.splitlines()[:6])
+            print(master_res)
         elif differenceMode == "full":
             mock_funcs = mock_res.split("Coverage of")
             master_funcs = master_res.split("Coverage of")
@@ -84,19 +73,23 @@ def compareTest(test: str):
         print(f"{test} is the same!")   
     print(f"MockDescriptors: {countMockDescriptorCreations(mock_log)}")
 
-
-def countMockDescriptorCreations(log: str) -> int:
-    return log.count("Created mock descriptor for")
-
-
-def countNotFoundMethodForMock(log: str) -> int:
-    return log.count("No mock for ")
+    if differenceMode == "short":
+        return (parseCoverage(mock_res), parseCoverage(master_res)) 
+    elif differenceMode == "full":
+        return "", ""
 
 
 def check_all():
+    coverages = []
     for test in os.listdir(mockPath):
-        compareTest(test)
+        mock_cov, master_cov = compareTest(test)
+        coverages.append(mock_cov + master_cov)
         print()
+    
+    if differenceMode == "short":
+        print("Coverage results:")
+        coverages = '\n'.join(map(lambda x: ' '.join(x), coverages))
+        print(coverages)
 
 
 def main():
