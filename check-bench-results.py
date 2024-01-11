@@ -5,8 +5,9 @@ from re import L
 import sys
 from logUtils import *
 
-mockPath = "./kex/temp"
-masterPath = "./clean-kex/temp"
+mockPath = "./kex"
+masterPath = "./clean-kex"
+resultsDir = 'temp'
 logName = "kex.log"
 
 differenceMode = "short"
@@ -41,11 +42,11 @@ def printDiff(mock_res: str, master_res: str):
             
 
 def compareTest(test: str) -> ((str, str, str, str), (str, str, str, str)):
-    mock_log_path = os.path.join(mockPath, test, logName)
+    mock_log_path = os.path.join(mockPath, resultsDir, test, logName)
     mock_log = readFile(mock_log_path) 
     mock_res = getCoverage(mock_log)
 
-    master_res = getCoverage(readFile(os.path.join(masterPath, test, logName)))
+    master_res = getCoverage(readFile(os.path.join(masterPath, resultsDir, test, logName)))
 
     print(f"Comparing {test}...")
     if differenceMode == "short":
@@ -95,15 +96,24 @@ def check_all():
 
 
 def main():
-    global differenceMode
+    global differenceMode, resultsDir
     print("Current directory: ", os.getcwd())
-    if len(sys.argv) == 1:
+    it = iter(sys.argv)
+    targets = list[str]()
+    for arg in it:
+        if arg == '--dir':
+            resultsDir = next(it)
+        else:
+            targets.append(arg)
+        
+
+    if len(targets) == 1:
         differenceMode = "short"
         check_all()
         return
     else:
         differenceMode = "full"
-        for test in sys.argv[1:]:
+        for test in targets[1:]:
             compareTest(test)
         return
 
