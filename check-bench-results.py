@@ -7,6 +7,11 @@ from logUtils import *
 
 mockPath = "./kex"
 masterPath = "./clean-kex"
+def mockTests():
+    return os.listdir(os.path.join(mockPath, resultsDir))
+def masterTests():
+    return os.listdir(os.path.join(masterPath, resultsDir))
+
 resultsDir = 'temp'
 logName = "kex.log"
 
@@ -84,7 +89,7 @@ def compareTest(test: str) -> ((str, str, str, str), (str, str, str, str)):
 
 def check_all():
     coverages = []
-    for test in os.listdir(mockPath):
+    for test in os.listdir(mockTests()):
         mock_cov, master_cov = compareTest(test)
         coverages.append(mock_cov + master_cov)
         print()
