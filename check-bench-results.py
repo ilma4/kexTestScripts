@@ -5,15 +5,17 @@ from re import L
 import sys
 from logUtils import *
 
-mockPath = "./kex"
-masterPath = "./clean-kex"
-def mockTests():
-    return os.listdir(os.path.join(mockPath, resultsDir))
-def masterTests():
-    return os.listdir(os.path.join(masterPath, resultsDir))
 
 resultsDir = 'temp'
 logName = "kex.log"
+
+def mockPath():
+    return os.path.join("./kex", resultsDir)
+def masterPath():
+    return os.path.join("./clean-kex", resultsDir)
+
+# mockPath = "./kex"
+# masterPath = "./clean-kex"
 
 differenceMode = "short"
 
@@ -47,11 +49,11 @@ def printDiff(mock_res: str, master_res: str):
             
 
 def compareTest(test: str) -> ((str, str, str, str), (str, str, str, str)):
-    mock_log_path = os.path.join(mockPath, resultsDir, test, logName)
+    mock_log_path = os.path.join(mockPath(), test, logName)
     mock_log = readFile(mock_log_path) 
     mock_res = getCoverage(mock_log)
 
-    master_res = getCoverage(readFile(os.path.join(masterPath, resultsDir, test, logName)))
+    master_res = getCoverage(readFile(os.path.join(masterPath(), test, logName)))
 
     print(f"Comparing {test}...")
     if differenceMode == "short":
@@ -89,7 +91,7 @@ def compareTest(test: str) -> ((str, str, str, str), (str, str, str, str)):
 
 def check_all():
     coverages = []
-    for test in os.listdir(mockTests()):
+    for test in os.listdir(mockPath()):
         mock_cov, master_cov = compareTest(test)
         coverages.append(mock_cov + master_cov)
         print()
