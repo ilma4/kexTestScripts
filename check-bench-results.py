@@ -6,13 +6,14 @@ import sys
 from logUtils import *
 
 
-resultsDir = 'temp'
+firstDir = 'temp'
+secondDir = 'temp'
 logName = "kex.log"
 
 def mockPath():
-    return os.path.join("./kex", resultsDir)
+    return os.path.join("./kex", firstDir)
 def masterPath():
-    return os.path.join("./clean-kex", resultsDir)
+    return os.path.join("./clean-kex", secondDir)
 
 # mockPath = "./kex"
 # masterPath = "./clean-kex"
@@ -103,13 +104,18 @@ def check_all():
 
 
 def main():
-    global differenceMode, resultsDir
+    global differenceMode, firstDir, secondDir 
     print("Current directory: ", os.getcwd())
     it = iter(sys.argv)
     targets = list[str]()
     for arg in it:
-        if arg == '--dir':
-            resultsDir = next(it)
+        if arg == '--dir' or arg == '-bothDir':
+            firstDir = next(it)
+            secondDir = firstDir
+        elif arg == '--firstDir':
+            firstDir = next(it)
+        elif arg == '--secondDir':
+            secondDir = next(it)
         else:
             targets.append(arg)
         
